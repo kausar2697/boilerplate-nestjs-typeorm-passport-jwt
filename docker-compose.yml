@@ -1,0 +1,30 @@
+version: '3.7'
+
+services:
+  main:
+    container_name: main
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - ${PORT}:${PORT}
+      - 9229:9229
+    command: yarn start:dev
+    links:
+      - redis
+    env_file:
+      - .env
+    networks:
+      - webnet
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - 6379:6379
+    networks:
+      - webnet
+
+networks:
+  webnet:
